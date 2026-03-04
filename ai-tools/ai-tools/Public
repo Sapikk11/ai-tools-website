@@ -1,0 +1,126 @@
+:root {
+  --primary: #3b82f6;
+  --bg: #f9fafb;
+  --text: #111827;
+  --muted: #6b7280;
+  --card: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+header {
+  padding: 1.2rem;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+nav a {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.container {
+  padding: 1.5rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.hero {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: var(--card);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+.card a {
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.tool-box {
+  margin: 1rem 0;
+}
+
+textarea, input {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+}
+
+button {
+  background: var(--primary);
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #eef2ff;
+  border-radius: 8px;
+  min-height: 60px;
+}
+
+.ad-box {
+  border: 1px dashed #ccc;
+  padding: 1rem;
+  text-align: center;
+  color: #999;
+  margin: 1rem 0;
+}
+
+.sidebar {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+}
+
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  padding: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
