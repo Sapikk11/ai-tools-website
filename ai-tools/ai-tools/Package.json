@@ -1,0 +1,14 @@
+{
+  "name": "ai-tools",
+  "version": "1.0.0",
+  "description": "AI Tools MVP with username, caption, and bio generators",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Startup Founder",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
