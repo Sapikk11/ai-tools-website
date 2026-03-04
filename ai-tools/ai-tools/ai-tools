@@ -1,0 +1,490 @@
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const LOG_FILE = path.join(__dirname, "data", "logs.json");
+const RATE_LIMIT = 10; // 10 requests/day per IP
+
+// Ensure logs file exists
+if (!fs.existsSync(LOG_FILE)) {
+  fs.mkdirSync(path.join(__dirname, "data"), { recursive: true });
+  fs.writeFileSync(LOG_FILE, JSON.stringify({ counters: {}, requests: [] }, null, 2));
+}
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+
+// Rate limit middleware
+function rateLimiter(req, res, next) {
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const today = new Date().toISOString().slice(0, 10);
+
+  const data = JSON.parse(fs.readFileSync(LOG_FILE, "utf8"));
+
+  if (!data.counters[ip] || data.counters[ip].date !== today) {
+    data.counters[ip] = { date: today, count: 0 };
+  }
+
+  if (data.counters[ip].count >= RATE_LIMIT) {
+    return res.status(429).json({
+      error: "Daily free request limit reached. Upgrade to Pro for unlimited access."
+    });
+  }
+
+  data.counters[ip].count += 1;
+
+  data.requests.push({
+    ip,
+    endpoint: req.path,
+    date: new Date().toISOString()
+  });
+
+  fs.writeFileSync(LOG_FILE, JSON.stringify(data, null, 2));
+
+  next();
+}
+
+// Generator functions
+function generateUsername(prompt) {
+  const adjectives = ["Cool", "Epic", "Smart", "Swift", "Bold", "Creative", "Bright"];
+  const nouns = ["Coder", "Explorer", "Artist", "Guru", "Builder", "Mind", "Vision"];
+  const numbers = ["007", "101", "X", "99", "Pro", "HQ", "One"];
+
+  return `${adjectives[Math.floor(Math.random()*adjectives.length)]}${prompt}${nouns[Math.floor(Math.random()*nouns.length)]}${numbers[Math.floor(Math.random()*numbers.length)]}`;
+}
+
+function generateCaption(prompt) {
+  const templates = [
+    `Living my best ${prompt} life ✨`,
+    `Today’s mood: ${prompt} and unstoppable 💪`,
+    `Just a little ${prompt} magic in the air ✨`,
+    `${prompt} vibes only 🌈`,
+    `Fuelled by ${prompt} & big dreams 🚀`
+  ];
+  return templates[Math.floor(Math.random()*templates.length)];
+}
+
+function generateBio(prompt) {
+  const templates = [
+    `Passionate about ${prompt}. Dreaming big and building daily.`,
+    `Explorer of ${prompt}. Sharing my journey with the world.`,
+    `${prompt} enthusiast | Creating, learning, growing.`,
+    `Chasing goals, fueled by ${prompt} energy.`,
+    `Here for the ${prompt}. Always evolving.`
+  ];
+  return templates[Math.floor(Math.random()*templates.length)];
+}
+
+// API routes
+app.post("/api/username", rateLimiter, (req, res) => {
+  const prompt = req.body.prompt || "User";
+  res.json({ result: generateUsername(prompt) });
+});
+
+app.post("/api/caption", rateLimiter, (req, res) => {
+  const prompt = req.body.prompt || "good";
+  res.json({ result: generateCaption(prompt) });
+});
+
+app.post("/api/bio", rateLimiter, (req, res) => {
+  const prompt = req.body.prompt || "creative";
+  res.json({ result: generateBio(prompt) });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+{
+  "counters": {},
+  "requests": []
+}
+:root {
+  --primary: #3b82f6;
+  --bg: #f9fafb;
+  --text: #111827;
+  --muted: #6b7280;
+  --card: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+header {
+  padding: 1.2rem;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+nav a {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.container {
+  padding: 1.5rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.hero {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: var(--card);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+.card a {
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.tool-box {
+  margin: 1rem 0;
+}
+
+textarea, input {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+}
+
+button {
+  background: var(--primary);
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #eef2ff;
+  border-radius: 8px;
+  min-height: 60px;
+}
+
+.ad-box {
+  border: 1px dashed #ccc;
+  padding: 1rem;
+  text-align: center;
+  color: #999;
+  margin: 1rem 0;
+}
+
+.sidebar {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+}
+
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  padding: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+async function handleGenerate(endpoint) {
+  const input = document.getElementById("prompt");
+  const resultBox = document.getElementById("result");
+  resultBox.innerText = "Generating...";
+
+  try {
+    const res = await fetch(`/api/${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: input.value })
+    });
+
+    const data = await res.json();
+    if (data.error) {
+      resultBox.innerText = data.error;
+    } else {
+      resultBox.innerText = data.result;
+    }
+  } catch (err) {
+    resultBox.innerText = "Error generating result.";
+  }
+}
+
+function copyResult() {
+  const text = document.getElementById("result").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied to clipboard!");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Tools - Free Generators</title>
+  <meta name="description" content="Generate AI usernames, captions, and bios for free.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AI Tools</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/upgrade.html">Upgrade</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="ad-box">AdSense Placeholder (Header)</div>
+
+    <div class="hero">
+      <h2>Free AI Generators</h2>
+      <p>Create usernames, captions, and bios in seconds.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>Username Generator</h3>
+        <p>Create unique usernames instantly.</p>
+        <a href="/username.html">Try Now →</a>
+      </div>
+      <div class="card">
+        <h3>Caption Generator</h3>
+        <p>Generate catchy captions for posts.</p>
+        <a href="/caption.html">Try Now →</a>
+      </div>
+      <div class="card">
+        <h3>Bio Generator</h3>
+        <p>Create bios for social profiles.</p>
+        <a href="/bio.html">Try Now →</a>
+      </div>
+    </div>
+
+    <div class="ad-box">AdSense Placeholder (In-content)</div>
+  </div>
+
+  <footer>
+    © 2025 AI Tools — Built for creators.
+  </footer>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Username Generator</title>
+  <meta name="description" content="Generate creative usernames instantly.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AI Tools</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/upgrade.html">Upgrade</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="ad-box">AdSense Placeholder (Header)</div>
+    <h2>Username Generator</h2>
+    <p>Enter a keyword (name, hobby, etc.)</p>
+
+    <div class="tool-box">
+      <input id="prompt" placeholder="e.g. gamer, travel, music">
+      <button onclick="handleGenerate('username')">Generate</button>
+      <div id="result" class="result-box"></div>
+      <button onclick="copyResult()">Copy</button>
+    </div>
+
+    <div class="ad-box">AdSense Placeholder (In-content)</div>
+
+    <div class="sidebar ad-box">AdSense Placeholder (Sidebar)</div>
+  </div>
+
+  <footer>© 2025 AI Tools</footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Caption Generator</title>
+  <meta name="description" content="Generate catchy captions instantly.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AI Tools</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/upgrade.html">Upgrade</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="ad-box">AdSense Placeholder (Header)</div>
+    <h2>Caption Generator</h2>
+    <p>Enter a keyword or mood</p>
+
+    <div class="tool-box">
+      <input id="prompt" placeholder="e.g. travel, fitness, vibes">
+      <button onclick="handleGenerate('caption')">Generate</button>
+      <div id="result" class="result-box"></div>
+      <button onclick="copyResult()">Copy</button>
+    </div>
+
+    <div class="ad-box">AdSense Placeholder (In-content)</div>
+    <div class="sidebar ad-box">AdSense Placeholder (Sidebar)</div>
+  </div>
+
+  <footer>© 2025 AI Tools</footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Bio Generator</title>
+  <meta name="description" content="Generate creative bios instantly.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AI Tools</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/upgrade.html">Upgrade</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="ad-box">AdSense Placeholder (Header)</div>
+    <h2>Bio Generator</h2>
+    <p>Enter a keyword or topic</p>
+
+    <div class="tool-box">
+      <input id="prompt" placeholder="e.g. entrepreneur, artist">
+      <button onclick="handleGenerate('bio')">Generate</button>
+      <div id="result" class="result-box"></div>
+      <button onclick="copyResult()">Copy</button>
+    </div>
+
+    <div class="ad-box">AdSense Placeholder (In-content)</div>
+    <div class="sidebar ad-box">AdSense Placeholder (Sidebar)</div>
+  </div>
+
+  <footer>© 2025 AI Tools</footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upgrade to Pro</title>
+  <meta name="description" content="Upgrade for unlimited AI tools.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AI Tools</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/upgrade.html">Upgrade</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Upgrade to Pro</h2>
+    <p>Unlock unlimited generations + premium templates.</p>
+
+    <div class="card">
+      <h3>Plans</h3>
+      <table style="width:100%; border-collapse: collapse;">
+        <tr>
+          <th>Plan</th>
+          <th>Price</th>
+          <th>Features</th>
+        </tr>
+        <tr>
+          <td>Free</td>
+          <td>$0</td>
+          <td>10 generations/day</td>
+        </tr>
+        <tr>
+          <td>Pro</td>
+          <td>$9/mo</td>
+          <td>Unlimited + early access</td>
+        </tr>
+      </table>
+      <button style="margin-top:1rem;">Upgrade (Coming Soon)</button>
+    </div>
+  </div>
+
+  <footer>© 2025 AI Tools</footer>
+</body>
+</html>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://yourdomain.com/</loc></url>
+  <url><loc>https://yourdomain.com/username.html</loc></url>
+  <url><loc>https://yourdomain.com/caption.html</loc></url>
+  <url><loc>https://yourdomain.com/bio.html</loc></url>
+  <url><loc>https://yourdomain.com/upgrade.html</loc></url>
+</urlset>
+User-agent: *
+Allow: /
+
+Sitemap: https://yourdomain.com/sitemap.xml
+git clone <repo>
+cd ai-tools
+npm install
+npm start
+npm install
+npm start
