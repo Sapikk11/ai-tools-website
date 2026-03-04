@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Tools - Free Generators</title>
+  <meta name="description" content="Generate AI usernames, captions, and bios for free.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AI Tools</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/upgrade.html">Upgrade</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="ad-box">AdSense Placeholder (Header)</div>
+
+    <div class="hero">
+      <h2>Free AI Generators</h2>
+      <p>Create usernames, captions, and bios in seconds.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>Username Generator</h3>
+        <p>Create unique usernames instantly.</p>
+        <a href="/username.html">Try Now →</a>
+      </div>
+      <div class="card">
+        <h3>Caption Generator</h3>
+        <p>Generate catchy captions for posts.</p>
+        <a href="/caption.html">Try Now →</a>
+      </div>
+      <div class="card">
+        <h3>Bio Generator</h3>
+        <p>Create bios for social profiles.</p>
+        <a href="/bio.html">Try Now →</a>
+      </div>
+    </div>
+
+    <div class="ad-box">AdSense Placeholder (In-content)</div>
+  </div>
+
+  <footer>
+    © 2025 AI Tools — Built for creators.
+  </footer>
+</body>
+</html>
