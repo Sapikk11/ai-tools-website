@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upgrade to Pro</title>
+  <meta name="description" content="Upgrade for unlimited AI tools.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AI Tools</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/upgrade.html">Upgrade</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Upgrade to Pro</h2>
+    <p>Unlock unlimited generations + premium templates.</p>
+
+    <div class="card">
+      <h3>Plans</h3>
+      <table style="width:100%; border-collapse: collapse;">
+        <tr>
+          <th>Plan</th>
+          <th>Price</th>
+          <th>Features</th>
+        </tr>
+        <tr>
+          <td>Free</td>
+          <td>$0</td>
+          <td>10 generations/day</td>
+        </tr>
+        <tr>
+          <td>Pro</td>
+          <td>$9/mo</td>
+          <td>Unlimited + early access</td>
+        </tr>
+      </table>
+      <button style="margin-top:1rem;">Upgrade (Coming Soon)</button>
+    </div>
+  </div>
+
+  <footer>© 2025 AI Tools</footer>
+</body>
+</html>
