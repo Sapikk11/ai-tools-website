@@ -1,0 +1,28 @@
+async function handleGenerate(endpoint) {
+  const input = document.getElementById("prompt");
+  const resultBox = document.getElementById("result");
+  resultBox.innerText = "Generating...";
+
+  try {
+    const res = await fetch(`/api/${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: input.value })
+    });
+
+    const data = await res.json();
+    if (data.error) {
+      resultBox.innerText = data.error;
+    } else {
+      resultBox.innerText = data.result;
+    }
+  } catch (err) {
+    resultBox.innerText = "Error generating result.";
+  }
+}
+
+function copyResult() {
+  const text = document.getElementById("result").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied to clipboard!");
+}
