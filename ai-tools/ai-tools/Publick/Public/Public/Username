@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Username Generator</title>
+  <meta name="description" content="Generate creative usernames instantly.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AI Tools</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/upgrade.html">Upgrade</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="ad-box">AdSense Placeholder (Header)</div>
+    <h2>Username Generator</h2>
+    <p>Enter a keyword (name, hobby, etc.)</p>
+
+    <div class="tool-box">
+      <input id="prompt" placeholder="e.g. gamer, travel, music">
+      <button onclick="handleGenerate('username')">Generate</button>
+      <div id="result" class="result-box"></div>
+      <button onclick="copyResult()">Copy</button>
+    </div>
+
+    <div class="ad-box">AdSense Placeholder (In-content)</div>
+
+    <div class="sidebar ad-box">AdSense Placeholder (Sidebar)</div>
+  </div>
+
+  <footer>© 2025 AI Tools</footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>
